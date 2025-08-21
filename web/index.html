@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DewOps Maps Data</title>
+<link rel="icon" type="image/svg+xml" href="/public/icons/favicon.png" />
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body class="body-dust"> 
+     <canvas id="dust-canvas"></canvas>
+<div id="app">
+    <div class="page">
+     
+      <header class="brandbar">
+        <div class="brand-left">
+          <a class="brand" href="https://dewops.com/?utm_source=mapsdata&utm_medium=app&utm_campaign=oss_logo" target="_blank" rel="noopener">
+            <div class="logo-container">
+              <img src="/public/icons/dewops.png" alt="Dewops Logo" class="logo-img"/>
+            </div>
+          </a>
+        </div>
+        
+        <div class="theme-switch">
+          <div class="seg">
+            <button id="modeDark" aria-pressed="true" title="Dark">Dark</button>
+            <button id="modeLight" aria-pressed="false" title="Light">Light</button>
+          </div>
+         
+        </div>
+        
+        <div class="brand-right">
+          <select id="langSwitcher" aria-label="Language">
+            <option value="tr">TR🇹🇷</option>
+            <option value="en">EN🇬🇧</option>
+          </select>
+        </div>
+  
+<button id="btnHelp" class="btn" title="Help">❓️</button>
+
+      </header>
+
+
+<main class="container">
+<section class="card">
+<h2 class="card-title" data-i18n="app.title">Maps Data</h2>
+<form id="searchForm" class="form">
+<div class="row">
+<input id="ulke" placeholder="Ülke" data-i18n-placeholder="form.country" />
+<input id="sehir" placeholder="Şehir" data-i18n-placeholder="form.city" />
+<input id="ilce" placeholder="İlçe" data-i18n-placeholder="form.district" />
+<input id="mahalle" placeholder="Mahalle" data-i18n-placeholder="form.neighborhood" />
+</div>
+<div class="row">
+<input id="sektor" placeholder="Sektör" data-i18n-placeholder="form.sector" />
+<input id="keyword" placeholder="Anahtar kelime" data-i18n-placeholder="form.keyword" />
+<button id="btnSearch" type="submit" class="btn-primary" data-i18n="form.search">Ara</button>
+
+
+</div>
+</form>
+<div id="historyMount" class="historybar"></div>
+</section>
+
+
+<section class="card">
+<div id="tableMount"></div>
+<div class="actions">
+<button id="btnCopy" class="btn" data-i18n="export.copy">Kopyala</button>
+<button id="btnExcel" class="btn" data-i18n="export.excel">Excel</button>
+<button id="btnPDF" class="btn" data-i18n="export.pdf">PDF</button>
+<button id="btnPrint" class="btn" data-i18n="export.print">Yazdır</button>
+</div>
+</section>
+
+</main>
+
+<script type="module" src="/src/main.js"></script>
+<footer class="section" style="text-align:center; opacity:.85">
+  <small>
+    Powered by <a href="https://dewops.com/?utm_source=mapsdata&utm_medium=app&utm_campaign=oss_footer"
+                  target="_blank" rel="noopener">DewOps</a>
+    • v0.1
+  </small>
+</footer>
+<script>
+// Dewops yeşilini CSS değişkeninden alabiliriz
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : { r: 0, g: 222, g: 122 }; // Fallback: #00DE7A
+}
+
+function initDustOverlay() {
+  const canvas = document.getElementById('dust-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width = window.innerWidth;
+  const height = canvas.height = window.innerHeight;
+
+  // Dewops yeşilini CSS değişkeninden al
+  const dewopsGreen = getComputedStyle(document.documentElement)
+    .getPropertyValue('--dewops-green').trim() || '#00DE7A';
+  
+  const rgb = hexToRgb(dewopsGreen);
+
+  const particles = Array.from({ length: 80 }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 1.0) * 0.4,
+    size: Math.random() * 1.4 + 0.9,
+    alpha: Math.random() * 0.6 + 0.4
+  }));
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      // Ekran dışına çıkanları resetle
+      if (p.y < -20 || p.x < -20 || p.x > width + 20 || p.y > height + 20) {
+        p.x = Math.random() * width;
+        p.y = height + 10;
+      }
+      
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${p.alpha * 0.6})`; // 💚
+      ctx.fill();
+    });
+    
+    requestAnimationFrame(animate);
+  }
+
+  // Resize event için
+  function handleResize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', handleResize);
+  animate();
+}
+
+// DOM hazır olduğunda başlat
+document.addEventListener('DOMContentLoaded', initDustOverlay);
+
+// Dust toggle için (senin mevcut koduna entegre)
+document.getElementById('dustOn')?.addEventListener('click', () => {
+  document.getElementById('dust-canvas').style.display = 'block';
+});
+
+document.getElementById('dustOff')?.addEventListener('click', () => {
+  document.getElementById('dust-canvas').style.display = 'none';
+});
+</script>
+</div>
+</html>

@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600;800&display=swap');
+
+:root {
+  /* Temel Ölçüler */
+  --ui-scale: 1.22;
+  --radius: 14px;
+  --radius-2xl: 18px;
+  
+  /* Yazı Tipleri */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  
+  /* Renk Tanımları - Varsayılan (Light Tema için bazıları) */
+  --dewops-green: #00DE7A;
+  --dewops-green-600: #00B764;
+  --accent-500: var(--dewops-green); /* Eski değişkeni yenisine bağla */
+  --bg-950: #1e3534;
+  --bg-900: #eef7f1; /* Light tema default */
+  --bg-800: #e6f2eb; /* Light tema default */
+  --bg-700: #dfeee6; /* Light tema default */
+  --text-100: #0e2416; /* Light tema default */
+  --text-300: #355845; /* Light tema default */
+  --muted: #9FB9AD;
+  --line-500: #c7e0d4; /* Light tema default */
+  --shadow-1: 0 8px 24px rgba(0,0,0,.08); /* Light tema default */
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent-500) 28%, transparent); /* Light tema default */
+  
+  /* Türetilmiş Renkler (Light tema default) */
+  --accent-600: var(--accent-500);
+  --accent-700: color-mix(in oklab, var(--accent-500) 88%, black);
+}
+
+/* DARK TEMA */
+[data-theme="dark"] {
+  --bg-900: #111614;
+  --bg-800: #111613;
+  --bg-700: #17221e;
+  --text-100: #E8F5EE;
+  --text-300: #c7e7d4;
+  --line-500: #24322b;
+  --shadow-1: 0 10px 28px rgba(0,0,0,.35);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent-500) 32%, transparent);
+  --accent-600: color-mix(in oklab, var(--accent-500) 95%, rgb(247, 247, 247));
+  --accent-700: color-mix(in oklab, var(--accent-500) 80%, black);
+}
+
+
+.body-dust::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: 
+    radial-gradient(
+      circle at 20% 30%,
+      color-mix(in srgb, var(--dewops-green) 8%, transparent) 0px,
+      transparent 50px
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      color-mix(in srgb, var(--dewops-green) 6%, transparent) 0px,
+      transparent 50px
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      color-mix(in srgb, var(--dewops-green) 10%, transparent) 0px,
+      transparent 10px
+    );
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+}
+
+/* Container için dust efekti */
+.container-dust::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: 
+    radial-gradient(
+      circle at 60% 20%,
+      color-mix(in srgb, var(--dewops-green) 5%, transparent) 0px,
+      transparent 40px
+    ),
+    radial-gradient(
+      circle at 30% 70%,
+      color-mix(in srgb, var(--dewops-green) 7%, transparent) 0px,
+      transparent 40px
+    );
+  opacity: 0.3;
+  mix-blend-mode: screen;
+  z-index: 1;
+}

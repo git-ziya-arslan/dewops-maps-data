@@ -1,0 +1,14 @@
+{
+  "name": "dewops-maps-data",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run -w server dev & npm run -w web dev",
+    "build": "npm run -w web build",
+    "start": "npm run -w server start"
+  }
+}
